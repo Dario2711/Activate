@@ -1,22 +1,15 @@
-# wedo-taskys
+# Activate
 ## COMANDOS PARA TRABAJAR EN ESTE REPO
-- `git clone https://github.com/RenzoPS/wedo-taskys`: Clona el repo, si no tenes en local
+- `git clone https://github.com/Dario2711/Activate`: Clona el repo, si no tenes en local
 - `git checkout develop`: Te posiciona en la rama develop
 - `git pull origin develop`: Trae los cambios del repo remoto al local en caso de q este ultimo este desactualizado (si no usaste clone)
 - `git checkout -b (nombre de la rama)`: Crea una rama y te posiciona en la misma
 - **Todas las ramas heredan el codigo de develop ya que este es el q debe estar mas actualizado**
 
-## POSIBLES NOMBRES DE RAMAS:
-- `feature/nombre-rama`: Rama para el desarrollo de una nueva funcionalidad o característica
-- `bugfix/nombre-rama`: Rama utilizada para corregir errores o problemas específicos en el proyecto
-- `hotfix/nombre-rama`: Rama para solucionar errores críticos en producción, aplicada de manera urgente
-- `refactor/nombre-rama`: Para cambios en el código que no modifican la funcionalidad (mejoras internas)
-- **La mayoria de veces vamos a usar 'feature'**
-
-## UNA VEZ HECHO TODOS LOS CAMBIOS NECESARIOS, ARCHIVOS AGREGADOS, ETC ETC:
+## UNA VEZ HECHO TODOS LOS CAMBIOS NECESARIOS, ARCHIVOS AGREGADOS, ETC:
 - `git add .`: Agrega todos los cambios y modificaciones hechas
 - `git commit -m "(mensaje)"`: Para comitear
-- `git remote add origin https://github.com/RenzoPS/wedo-taskys`: Vincula el repo remoto con el local
+- `git remote add origin https://github.com/Dario2711/Activate`: Vincula el repo remoto con el local
 - `git push origin (nombre-rama)`: Pushea los cambios hecho
 
 ## PARA MERGEAR ESTA RAMA CON DEVELOP (UNA VEZ HECHO TODOS LOS CAMBIOS): 
