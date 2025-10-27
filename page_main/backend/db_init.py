@@ -3,8 +3,13 @@ import sqlite3
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-AUTH_DB_PATH = os.path.join(BASE_DIR, 'auth.db')
-CHAT_DB_PATH = os.path.join(BASE_DIR, 'chat.db')
+# Guardar las bases en la carpeta Persistencia en la raíz del proyecto
+PERSISTENCE_DIR = os.path.abspath(os.path.join(BASE_DIR, '..', 'Persistencia'))
+AUTH_DB_PATH = os.path.join(PERSISTENCE_DIR, 'auth.db')
+CHAT_DB_PATH = os.path.join(PERSISTENCE_DIR, 'chat.db')
+
+# Asegurar que la carpeta exista
+os.makedirs(PERSISTENCE_DIR, exist_ok=True)
 
 
 def _connect(db_path: str):
