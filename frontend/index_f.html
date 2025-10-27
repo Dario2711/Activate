@@ -1,0 +1,95 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activate - Caminá, Generá Puntos, Canjeá Premios</title>
+    <link rel="stylesheet" href="styles_f.css">
+</head>
+<body>
+    <!-- Updated navbar structure to match reference -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="./img/logo2.png" width="90" height="90">
+                <span class="logo-text">ACTIVATE</span>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index_f.html">Como funciona</a></li>
+                <li><a href="index_d.html">Descargar</a></li>
+                <li><a href="index_h.html">Ayuda</a></li>
+            </ul>
+
+            <div class="nav-user">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="8" r="4" fill="currentColor"/>
+                    <path d="M4 20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21H4V20Z" fill="currentColor"/>
+                </svg>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav" id="mobileNav">
+            <a href="#inicio">Inicio</a>
+            <a href="#como-funciona">Como funciona</a>
+            <a href="#descargar">Descargar</a>
+            <a href="#ayuda">Ayuda</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="cards-grid">
+                <!-- Card 1 -->
+                <div class="card">
+                    <div class="card-content">
+                        <span class="step-label">Paso 1</span>
+                        <h2 class="card-title">CAMINÁ Y CONECTÁ</h2>
+                        <p class="card-description">
+                            Sincronizá Activate con tu dispositivo Samsung. Registramos automáticamente tus pasos y logros a través de Samsung Health.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card">
+                    <div class="card-content">
+                        <span class="step-label">Paso 2</span>
+                        <h2 class="card-title">GENERÁ PUNTOS</h2>
+                        <p class="card-description">
+                            Alcanzá tus metas diarias y semanales para ganar Puntos Active. Seguí tu progreso en tiempo real dentro de la app.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="card">
+                    <div class="card-content">
+                        <span class="step-label">Paso 3</span>
+                        <h2 class="card-title">CANJEÁ POR PREMIOS</h2>
+                        <p class="card-description">
+                            Usá tus puntos acumulados en la Tienda de Recompensas para obtener descuentos en wearables Samsung, tarjetas de regalo y más.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
