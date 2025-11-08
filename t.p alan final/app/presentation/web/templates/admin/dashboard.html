@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de Administración - Sistema de Usuarios{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Panel de Administración</h2>
+    <div>
+        <a href="{{ url_for('main.registro') }}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Nuevo Usuario
+        </a>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Usuarios Registrados</h5>
+    </div>
+    <div class="card-body">
+        {% if usuarios %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo Electrónico</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.id }}</td>
+                        <td>{{ usuario.nombre }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>
+                            {% if usuario.es_admin %}
+                            <span class="badge bg-success">Administrador</span>
+                            {% else %}
+                            <span class="badge bg-primary">Usuario</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                {% if not usuario.es_admin %}
+                                <form method="POST" action="{{ url_for('api.reiniciar_puntaje', usuario_id=usuario.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-warning" 
+                                            onclick="return confirm('¿Estás seguro de reiniciar la puntuación de {{ usuario.nombre }}?')">
+                                        <i class="bi bi-arrow-counterclockwise"></i> Reiniciar Puntos
+                                    </button>
+                                </form>
+                                {% endif %}
+                                
+                                {% if not usuario.es_admin or (usuario.es_admin and usuario.id == session['user_id']) %}
+                                    {% if usuario.id != session['user_id'] %}
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ usuario.id }}">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                
+                                <!-- Modal de confirmación para eliminar usuario -->
+                                <div class="modal fade" id="deleteUserModal{{ usuario.id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title">Confirmar Eliminación</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form method="POST" action="{{ url_for('api.eliminar_usuario', usuario_id=usuario.id) }}">
+                                                <div class="modal-body">
+                                                    <p>¿Estás seguro de que deseas eliminar al usuario <strong>{{ usuario.nombre }}</strong>?</p>
+                                                    <div class="mb-3">
+                                                        <label for="adminPassword{{ usuario.id }}" class="form-label">Contraseña de administrador:</label>
+                                                        <input type="password" class="form-control" id="adminPassword{{ usuario.id }}" name="admin_password" required>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" class="btn btn-danger">Eliminar Usuario</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <span class="text-muted">No disponible</span>
+                                {% endif %}
+                            {% else %}
+                            <span class="text-muted">No disponible</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">No hay usuarios registrados.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

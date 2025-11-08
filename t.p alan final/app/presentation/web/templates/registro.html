@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Registro - Sistema de Usuarios{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Crear Cuenta</h2>
+                <form method="POST" action="{{ url_for('main.registro') }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="confirmar_password" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="confirmar_password" name="confirmar_password" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="codigo_admin" class="form-label">Código de Administrador (opcional)</label>
+                        <input type="password" class="form-control" id="codigo_admin" name="codigo_admin" placeholder="Si tienes un código de administrador, ingrésalo aquí">
+                        <div class="form-text">Deja este campo vacío para crear una cuenta de usuario normal.</div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <p>¿Ya tienes una cuenta? <a href="{{ url_for('main.login') }}">Inicia sesión aquí</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Descargar - Activate{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-6">
+      <h2 class="fw-bold mb-3">Descargá la app</h2>
+      <p class="text-muted mb-4">Disponibile para Android y dispositivos Samsung compatibles.</p>
+      <div class="d-flex flex-wrap gap-3">
+        <a href="#" class="btn btn-dark btn-lg"><i class="bi bi-google-play me-2"></i>Google Play</a>
+        <a href="#" class="btn btn-outline-dark btn-lg"><i class="bi bi-phone me-2"></i>Galaxy Store</a>
+      </div>
+    </div>
+    <div class="col-lg-6 text-center">
+      <div class="bg-light rounded-4 p-5 shadow-sm d-inline-block">
+        <i class="bi bi-qr-code display-3 text-secondary"></i>
+        <p class="mb-0 mt-2 text-muted">Escaneá para descargar</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

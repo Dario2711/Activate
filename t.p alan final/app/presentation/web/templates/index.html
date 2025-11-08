@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Activate - Caminá, ganá y canjeá{% endblock %}
+
+{% block content %}
+<section id="hero">
+  <div class="hero-surface">
+    <div class="hero-row hero-content">
+      <!-- Izquierda -->
+      <div>
+        <div class="eyebrow">Activate: Convertí tus Pasos en Recompensas de Samsung.</div>
+        <h1 class="title">¡Caminá, ganá y canjeá!</h1>
+        <div class="subtitle">Tu actividad diaria tiene premio.</div>
+
+        <div class="qr-cta">
+          <div class="qr-card">
+            <div class="qr-box">
+              <!-- QR placeholder -->
+              <svg viewBox="0 0 100 100" width="90" height="90" fill="white" aria-hidden="true">
+                <rect x="0" y="0" width="7" height="7" />
+                <rect x="8" y="0" width="7" height="7" />
+                <rect x="16" y="0" width="7" height="7" />
+                <rect x="24" y="0" width="7" height="7" />
+                <rect x="32" y="0" width="7" height="7" />
+                <rect x="40" y="0" width="7" height="7" />
+                <rect x="48" y="0" width="7" height="7" />
+                <rect x="64" y="0" width="7" height="7" />
+                <rect x="72" y="0" width="7" height="7" />
+                <rect x="80" y="0" width="7" height="7" />
+                <rect x="88" y="0" width="7" height="7" />
+                <rect x="0" y="8" width="7" height="7" />
+                <rect x="48" y="8" width="7" height="7" />
+                <rect x="64" y="8" width="7" height="7" />
+                <rect x="88" y="8" width="7" height="7" />
+                <rect x="0" y="16" width="7" height="7" />
+                <rect x="16" y="16" width="7" height="7" />
+                <rect x="24" y="16" width="7" height="7" />
+                <rect x="32" y="16" width="7" height="7" />
+                <rect x="48" y="16" width="7" height="7" />
+                <rect x="64" y="16" width="7" height="7" />
+                <rect x="80" y="16" width="7" height="7" />
+                <rect x="88" y="16" width="7" height="7" />
+              </svg>
+            </div>
+          </div>
+          <div class="btns">
+            <a href="#" class="btn-pill-black">Google Play</a>
+            <a href="#" class="btn-pill-black">Galaxy Store</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Derecha: mockup de teléfono -->
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="screen">
+            {% if 'user_id' in session and not session.get('es_admin') %}
+            <div class="screen-inner embed-game">
+              <iframe src="{{ url_for('main.juego') }}?embed=1" title="Juego de Escritura"></iframe>
+            </div>
+            {% else %}
+            <div class="screen-inner">
+              <div class="status"><span>9:41</span><span>●●●</span></div>
+              <div class="points">
+                <p class="value">Bienvenido</p>
+                <p class="hint">Iniciá sesión para jugar</p>
+              </div>
+              <div class="cards">
+                <div class="card-tile">🎧</div>
+                <div class="card-tile">⌚</div>
+                <div class="card-tile">💳</div>
+              </div>
+              <a href="{{ url_for('main.login') }}" class="cta-rewards" style="display:inline-block; text-align:center; text-decoration:none;">Iniciar sesión</a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="py-4"></div>
+{% endblock %}

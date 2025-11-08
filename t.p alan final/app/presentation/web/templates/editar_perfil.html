@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Perfil - Sistema de Usuarios{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Editar Perfil</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" action="{{ url_for('main.editar_perfil') }}">
+                        <div class="row mb-4">
+                            <div class="col-md-4 text-center">
+                                <div class="mb-3">
+                                    <img src="{{ url_for('static', filename='uploads/' + usuario.foto_perfil) }}" 
+                                         class="img-thumbnail rounded-circle" 
+                                         id="preview" 
+                                         style="width: 200px; height: 200px; object-fit: cover;">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="foto_perfil" class="form-label">Cambiar foto de perfil</label>
+                                    <input class="form-control" type="file" id="foto_perfil" name="foto_perfil" 
+                                           accept="image/*" onchange="previewImage(event)">
+                                    <div class="form-text">Formatos: JPG, PNG, GIF, WEBP, BMP</div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" 
+                                           value="{{ usuario.nombre }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="email" name="email" 
+                                           value="{{ usuario.email }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="biografia" class="form-label">Biografía</label>
+                                    <textarea class="form-control" id="biografia" name="biografia" 
+                                              rows="3">{{ usuario.biografia }}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Nueva Contraseña (dejar en blanco para no cambiar)</label>
+                                    <input type="password" class="form-control" id="password" name="password">
+                                    <div class="form-text">Mínimo 6 caracteres</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirm_password" class="form-label">Confirmar Nueva Contraseña</label>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('main.perfil') }}" class="btn btn-secondary me-md-2">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const preview = document.getElementById('preview');
+        preview.src = reader.result;
+    }
+    if (event.target.files[0]) {
+        reader.readAsDataURL(event.target.files[0]);
+    }
+}
+
+// Validación de contraseña
+const form = document.querySelector('form');
+form.addEventListener('submit', function(e) {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    
+    if (password && password.length < 6) {
+        e.preventDefault();
+        alert('La contraseña debe tener al menos 6 caracteres.');
+        return false;
+    }
+    
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        alert('Las contraseñas no coinciden.');
+        return false;
+    }
+    
+    return true;
+});
+</script>
+{% endblock %}
