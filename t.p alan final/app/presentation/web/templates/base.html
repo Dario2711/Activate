@@ -26,9 +26,6 @@
                     {% if 'user_id' in session %}
                         {% if not session.get('es_admin') %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.juego') }}">Juego</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('main.ranking') }}">Ranking</a>
                         </li>
                         {% else %}
@@ -90,6 +87,28 @@
 
     {% if not request.args.get('embed') %}
     </div>
+    <footer class="site-footer">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between py-1">
+                <div class="d-flex align-items-center gap-2 footer-brand">
+                    <span class="brand-mark">A</span>
+                    <span class="fw-bold">Activate</span>
+                </div>
+                <div class="d-flex gap-3 footer-links">
+                    <a href="#" class="text-decoration-none">Privacidad</a>
+                    <a href="#" class="text-decoration-none">Términos</a>
+                    <a href="#" class="text-decoration-none">Contacto</a>
+                </div>
+            </div>
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between small text-muted pt-1">
+                <div>© 2025 Activate. Todos los derechos reservados.</div>
+                <div class="d-flex gap-3">
+                    <span>Argentina</span>
+                    <span>Español (AR)</span>
+                </div>
+            </div>
+        </div>
+    </footer>
     {% endif %}
     <!-- Modal de Instrucciones -->
     <div class="modal fade" id="instruccionesModal" tabindex="-1" aria-labelledby="instruccionesModalLabel" aria-hidden="true">

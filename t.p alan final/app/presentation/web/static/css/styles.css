@@ -14,7 +14,7 @@ body{ color:var(--text); background:#E8EBF0; }
 .btn-accent:hover{ filter:brightness(.95); color:var(--white); }
 
 /* Navbar (clean, Samsung-like) */
-.navbar{ min-height:72px; border-bottom:1px solid #eeeeee; }
+.navbar{ min-height:72px; border-bottom:1px solid #A3B1C2; box-shadow:0 4px 16px rgba(0,0,0,.08); }
 .navbar-brand{ font-size:1.75rem; letter-spacing:.6px; }
 .brand-logo{ height:56px; width:56px; object-fit:contain; margin-right:.6rem; filter:drop-shadow(0 1px 1px rgba(0,0,0,.15)); }
 .navbar .nav-link{ color:#0A1F44; font-weight:500; }
@@ -69,12 +69,13 @@ body{ color:var(--text); background:#E8EBF0; }
 }
 
 /* === Como Funciona === */
-.cf{ position:relative; padding:3rem 0; }
+.cf{ position:relative; padding:3rem 0; margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw); }
 .cf-bg{ position:absolute; inset:0; background:linear-gradient(180deg,#7BA5E8 0%, #9DB9E8 100%); z-index:0; }
 .cf-wrap{ position:relative; z-index:1; }
 .cf-grid{ display:grid; grid-template-columns:1fr; gap:1.25rem; max-width:1100px; margin:0 auto; padding:0 1rem; }
 @media (min-width:768px){ .cf-grid{ grid-template-columns:repeat(3,1fr); gap:1.5rem; } }
-.cf-card{ background:linear-gradient(180deg,#2C3E50 0%, #34495E 100%); color:#fff; border-radius:28px; padding:2rem; box-shadow:0 18px 40px rgba(0,0,0,.25); }
+.cf-card{ background:linear-gradient(180deg,#2C3E50 0%, #34495E 100%); color:#fff; border-radius:28px; padding:2rem; box-shadow:0 18px 40px rgba(0,0,0,.25); transition: transform .25s ease, box-shadow .25s ease; }
+.cf-card:hover{ transform: translateY(-6px); box-shadow:0 24px 56px rgba(0,0,0,.28); }
 .cf-card--alt1{ background:linear-gradient(180deg,#0A1F44 0%, #1E3A5F 100%); }
 .cf-card--alt2{ background:linear-gradient(180deg,#1A2942 0%, #2C3E5F 100%); }
 .cf-eyebrow{ color:rgba(255,255,255,.8); font-size:.95rem; font-weight:600; margin-bottom:.25rem; }
@@ -85,6 +86,11 @@ body{ color:var(--text); background:#E8EBF0; }
 #hero .lead{ color:rgba(25,25,25,.7); }
 #hero .hero-watermark{ position:absolute; top:-40px; right:-40px; width:480px; height:480px; opacity:.05; z-index:0; pointer-events:none; }
 #hero .hero-watermark img{ width:100%; height:100%; object-fit:contain; display:block; }
+
+/* Footer */
+.site-footer{ background:#EEF3F9; border-top:1px solid #8A99AB; padding:1.25rem 0; margin-top:2rem; box-shadow:0 -6px 16px rgba(0,0,0,.06); }
+.site-footer .container{ gap:.75rem; }
+.site-footer, .site-footer .small{ color:#0A1F44; }
 #hero .hero-content{ position:relative; z-index:1; }
 
 /* Responsive */
