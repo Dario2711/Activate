@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+
+{% block title %}Juego de Escritura Rápida{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="{{ 'col-12' if request.args.get('embed') else 'col-md-8 mx-auto' }}">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center mb-0">Juego de Escritura Rápida</h2>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="d-flex justify-content-center flex-wrap gap-2 mb-3">
+                            <span class="badge bg-primary">Puntaje: <span id="score">0</span></span>
+                            <span class="badge bg-danger">Vidas: <span id="lives">3</span>/3</span>
+                        </div>
+                        <p class="lead">Escribe el texto que aparece a continuación. Tienes 3 vidas.</p>
+                    </div>
+
+                    <div class="game-container p-4 bg-light rounded mb-4">
+                        <div id="text-display" class="mb-4 p-3 bg-white rounded border">
+                            <span id="original-text"></span>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" id="user-input" class="form-control form-control-lg text-center" 
+                                   placeholder="Escribe aquí..." autocomplete="off" disabled>
+                        </div>
+                        <div class="progress mb-3">
+                            <div id="progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="start-btn" class="btn btn-primary btn-lg">Comenzar Juego</button>
+                        <div id="result" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if not request.args.get('embed') %}
+        <div class="col-md-4 mt-4 mt-md-0">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Mejores Puntuaciones</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for usuario in top_usuarios %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ usuario.nombre }}
+                            <span class="badge bg-primary rounded-pill">{{ usuario.puntaje_maximo }} pts</span>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item">Aún no hay puntuaciones</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal de resultado -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">¡Juego Terminado!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <h4 id="final-score" class="mb-3">Puntaje: 0</h4>
+                <p id="result-message"></p>
+                <div id="new-high-score" class="alert alert-success d-none">
+                    ¡Nuevo récord personal!
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="play-again-btn">Jugar de nuevo</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #text-display {
+        min-height: 100px;
+        font-size: 1.2rem;
+        line-height: 1.6;
+    }
+    
+    #original-text {
+        white-space: pre-wrap;
+    }
+    
+    .correct {
+        color: #28a745;
+    }
+    
+    .incorrect {
+        color: #dc3545;
+        text-decoration: line-through;
+    }
+    
+    .current {
+        background-color: #ffc107;
+        border-radius: 3px;
+        padding: 0 2px;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elementos del DOM
+    const textDisplay = document.getElementById('text-display');
+    const originalText = document.getElementById('original-text');
+    const userInput = document.getElementById('user-input');
+    const startBtn = document.getElementById('start-btn');
+    const scoreElement = document.getElementById('score');
+    const livesElement = document.getElementById('lives');
+    const resultElement = document.getElementById('result');
+    const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+    const finalScoreElement = document.getElementById('final-score');
+    const resultMessage = document.getElementById('result-message');
+    const newHighScoreElement = document.getElementById('new-high-score');
+    const playAgainBtn = document.getElementById('play-again-btn');
+
+    // Variables del juego
+    let score = 0;
+    let lives = 3;
+    let currentWordIndex = 0;
+    let words = [];
+    let currentWord = '';
+    let currentCharIndex = 0;
+    let gameActive = false;
+    let isNewHighScore = false;
+
+    // Textos aleatorios para el juego
+    const texts = [
+        "El rápido zorro marrón salta sobre el perro perezoso. Los pingüinos del emperador son aves no voladoras que viven en la Antártida. La programación es el proceso de crear un conjunto de instrucciones que le dicen a una computadora cómo realizar una tarea.",
+        "La inteligencia artificial es la simulación de procesos de inteligencia humana por parte de máquinas, especialmente sistemas informáticos. Python es un lenguaje de programación interpretado cuya filosofía hace hincapié en la legibilidad de su código.",
+        "El universo es todo lo que podemos tocar, sentir, percibir, medir o detectar. Incluye cosas vivas, planetas, estrellas, galaxias, nubes de polvo, luz e incluso el tiempo. La Tierra es el tercer planeta del sistema solar.",
+        "La música es el arte de organizar sensible y lógicamente una combinación coherente de sonidos y silencios respetando los principios fundamentales de la melodía, la armonía y el ritmo. La música es un estímulo que afecta el campo perceptivo del individuo.",
+        "La tecnología se refiere a la colección de herramientas que hacen que sea más fácil usar, crear, administrar e intercambiar información. En los primeros tiempos de la humanidad, la tecnología consistía en herramientas simples como el martillo de piedra y el cuchillo de piedra."
+    ];
+
+    // Iniciar el juego
+    function startGame() {
+        // Reiniciar variables
+        score = 0;
+        lives = 3;
+        currentWordIndex = 0;
+        currentCharIndex = 0;
+        gameActive = true;
+        
+        // Actualizar la interfaz
+        scoreElement.textContent = score;
+        livesElement.textContent = lives;
+        startBtn.disabled = true;
+        userInput.disabled = false;
+        userInput.value = '';
+        resultElement.textContent = '';
+        newHighScoreElement.classList.add('d-none');
+        
+        // Seleccionar un texto aleatorio
+        currentText = texts[Math.floor(Math.random() * texts.length)];
+        words = currentText.split(/\s+/);
+        
+        // Mostrar el texto
+        displayText();
+        
+        // Enfocar el campo de entrada
+        userInput.focus();
+    }
+    
+    // Mostrar el texto con formato
+    function displayText() {
+        let html = '';
+        words.forEach((word, i) => {
+            if (i < currentWordIndex) {
+                html += `<span class="correct">${word}</span> `;
+            } else if (i === currentWordIndex) {
+                let wordHtml = '';
+                for (let j = 0; j < word.length; j++) {
+                    if (j < currentCharIndex) {
+                        wordHtml += `<span class="correct">${word[j]}</span>`;
+                    } else if (j === currentCharIndex) {
+                        wordHtml += `<span class="current">${word[j]}</span>`;
+                    } else {
+                        wordHtml += word[j];
+                    }
+                }
+                html += `<span>${wordHtml}</span> `;
+            } else {
+                html += `${word} `;
+            }
+        });
+        originalText.innerHTML = html.trim();
+    }
+    
+    // Finalizar el juego
+    function endGame(isWin) {
+        gameActive = false;
+        userInput.disabled = true;
+        startBtn.disabled = false;
+        
+        // Mostrar el resultado
+        finalScoreElement.textContent = `Puntaje: ${score}`;
+        
+        if (isWin) {
+            resultMessage.textContent = '¡Felicidades! Has completado el texto correctamente.';
+        } else if (lives <= 0) {
+            resultMessage.textContent = '¡Se acabaron tus vidas! Inténtalo de nuevo.';
+        } else {
+            resultMessage.textContent = '¡Se acabó el juego! Sigue practicando.';
+        }
+        
+        // Mostrar si es un nuevo récord
+        if (isNewHighScore) {
+            newHighScoreElement.classList.remove('d-none');
+        }
+        
+        // Mostrar el modal de resultado
+        resultModal.show();
+    }
+    
+    // Guardar el puntaje
+    function saveScore() {
+        if (score > 0) {
+            fetch('/api/guardar_puntaje', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ puntaje: score })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Puntaje guardado:', data.message);
+                } else {
+                    console.error('Error al guardar el puntaje:', data.error);
+                    // Fallback a TCP si falla el endpoint normal
+                    return fetch('/api/guardar_puntaje_tcp', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ puntaje: score })
+                    }).then(r => r.json()).then(d => {
+                        if (!d.success) {
+                            console.error('Fallo también el guardado por TCP:', d.error || d.details);
+                        }
+                    });
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
+
+
+    // Event Listeners
+    startBtn.addEventListener('click', startGame);
+    
+    playAgainBtn.addEventListener('click', () => {
+        resultModal.hide();
+        startGame();
+    });
+    
+    userInput.addEventListener('input', (e) => {
+        if (!gameActive) return;
+        
+        const currentChar = userInput.value[userInput.value.length - 1];
+        const expectedChar = words[currentWordIndex][currentCharIndex];
+        
+        // Si es un espacio, verificar si es el final de la palabra
+        if (currentChar === ' ') {
+            // Si estamos al final de la palabra actual, avanzar a la siguiente
+            if (currentCharIndex === words[currentWordIndex].length) {
+                score += 10;
+                scoreElement.textContent = score;
+                currentWordIndex++;
+                currentCharIndex = 0;
+                userInput.value = '';
+                
+                // Verificar si se completó todo el texto
+                if (currentWordIndex >= words.length) {
+                    saveScore();
+                    endGame(true);
+                    return;
+                }
+            } else {
+                // Si no estamos al final de la palabra, ignorar el espacio
+                userInput.value = userInput.value.slice(0, -1);
+                return;
+            }
+        } 
+        // Si no es un espacio, verificar el carácter
+        else if (currentChar === expectedChar) {
+            // Carácter correcto
+            currentCharIndex++;
+            
+            // Si se completó la palabra actual
+            if (currentCharIndex >= words[currentWordIndex].length) {
+                // No sumamos puntos aquí, se sumarán cuando presione espacio o complete la siguiente palabra
+                // score += 10;
+                // scoreElement.textContent = score;
+                
+                // Verificar si es la última palabra
+                if (currentWordIndex >= words.length - 1) {
+                    score += 10; // Sumar puntos por la última palabra
+                    scoreElement.textContent = score;
+                    saveScore();
+                    endGame(true);
+                    return;
+                }
+            }
+        } else {
+            // Carácter incorrecto
+            userInput.value = userInput.value.slice(0, -1); // Eliminar el último carácter
+            lives--;
+            livesElement.textContent = lives;
+            
+            if (lives <= 0) {
+                saveScore();
+                endGame(false);
+                return;
+            }
+        }
+        
+        // Actualizar la visualización del texto
+        displayText();
+    });
+    
+    // Inicialización
+    userInput.disabled = true;
+});
+</script>
+{% endblock %}

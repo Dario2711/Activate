@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Recompensas - Activate{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <h2 class="mb-4 fw-bold"><i class="bi bi-gift"></i> Catálogo de Recompensas</h2>
+      <p class="text-muted mb-4">Canjeá tus puntos por descuentos, premios y logros exclusivos.</p>
+      <div class="row g-4">
+        {% for recompensa in recompensas %}
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 h-100">
+            <img src="{{ url_for('static', filename='img/' ~ (recompensa.imagen or 'default.png')) }}" class="card-img-top" style="object-fit:contain;max-height:120px;background:#f6f7fa;">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{{ recompensa.nombre }}</h5>
+              <p class="card-text small">{{ recompensa.descripcion }}</p>
+              <div class="mb-2">
+                <span class="badge bg-success">{{ recompensa.puntos }} puntos</span>
+              </div>
+              <form method="POST" class="mt-auto">
+                <input type="hidden" name="recompensa_id" value="{{ recompensa.id }}">
+                <button type="submit" class="btn btn-primary w-100 fw-bold" {% if usuario.puntaje_maximo < recompensa.puntos %}disabled{% endif %}>
+                  Canjear
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% if logros %}
+  <div class="row mt-5">
+    <div class="col-lg-8 mx-auto">
+      <h4 class="fw-bold"><i class="bi bi-trophy"></i> Tus logros y canjes</h4>
+      <ul class="list-group">
+        {% for logro in logros %}
+        <li class="list-group-item d-flex align-items-center gap-3">
+          <img src="{{ url_for('static', filename='img/' ~ (logro.recompensa.imagen or 'default.png')) }}" style="width:48px;height:48px;object-fit:contain;">
+          <div>
+            <strong>{{ logro.recompensa.nombre }}</strong>
+            <div><span class="text-muted small">{{ logro.recompensa.descripcion }}</span></div>
+          </div>
+          <span class="mx-2 badge bg-success">-{{ logro.recompensa.puntos }} pts</span>
+          <span class="ms-auto text-muted small">{{ logro.fecha.strftime('%d/%m/%Y %H:%M') }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Registro - Activate{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4">Crear Cuenta</h2>
+                <form method="POST" action="{{ url_for('main.registro') }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required autofocus>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="confirmar_password" class="form-label">Confirmar</label>
+                            <input type="password" class="form-control" id="confirmar_password" name="confirmar_password" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="codigo_admin" class="form-label">Código Admin <small class="text-muted">(opcional)</small></label>
+                        <input type="password" class="form-control" id="codigo_admin" name="codigo_admin" placeholder="Solo si tenés código de administrador">
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Registrarse</button>
+                    </div>
+                </form>
+                <div class="text-center mt-4">
+                    <p class="mb-0">¿Ya tenés cuenta? <a href="{{ url_for('main.login') }}">Iniciar sesión</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
