@@ -328,8 +328,7 @@ python -m app
 | Archivo | Propósito |
 |---------|-----------|
 | `iniciar_servidor.bat` | Inicia servidor Flask |
-| `iniciar_servicio_distribuido.bat` | Inicia servicio distribuido |
-| `iniciar_todo.bat` | Inicia todos los servicios |
+| `iniciar.bat` | Inicia la aplicacion
 
 #### Documentación
 
