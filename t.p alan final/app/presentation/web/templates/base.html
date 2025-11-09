@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Sistema de Usuarios{% endblock %}</title>
+    <title>{% block title %}Activate{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v=20251108-01">
 </head>
 <body>
     {% if not request.args.get('embed') %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white" style="position:relative; z-index:9998;">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('main.index') }}">
-                ACTIVATE
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Activate" class="brand-logo me-2">
+                <span>ACTIVATE</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -22,6 +23,9 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.como_funciona') }}">Como funciona</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.recompensas') }}">Recompensas</a>
                     </li>
                     {% if 'user_id' in session %}
                         {% if not session.get('es_admin') %}
@@ -70,7 +74,7 @@
             </div>
         </div>
     </nav>
-    <div class="container mt-4">
+    <div class="container mt-4" style="position:relative; z-index:1;">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -91,7 +95,7 @@
         <div class="container">
             <div class="d-flex flex-column flex-md-row align-items-center justify-content-between py-1">
                 <div class="d-flex align-items-center gap-2 footer-brand">
-                    <span class="brand-mark">A</span>
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Activate" class="footer-logo me-2">
                     <span class="fw-bold">Activate</span>
                 </div>
                 <div class="d-flex gap-3 footer-links">

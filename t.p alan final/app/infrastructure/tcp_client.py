@@ -10,7 +10,6 @@ def _send_request(payload: Dict[str, Any], timeout: float = 3.0) -> Tuple[bool, 
     data = (json.dumps(payload) + "\n").encode('utf-8')
     with socket.create_connection((HOST, PORT), timeout=timeout) as s:
         s.sendall(data)
-        # read until newline
         buf = b''
         while True:
             chunk = s.recv(4096)
@@ -23,8 +22,7 @@ def _send_request(payload: Dict[str, Any], timeout: float = 3.0) -> Tuple[bool, 
             resp = json.loads(buf.decode('utf-8').strip())
         except json.JSONDecodeError:
             return False, {"error": "invalid_response"}
-        ok = bool(resp.get('success'))
-        return ok, resp
+        return bool(resp.get('success')), resp
 
 def save_score_via_tcp(user_id: int, puntaje: int) -> Tuple[bool, Dict[str, Any]]:
     return _send_request({

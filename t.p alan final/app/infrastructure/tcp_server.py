@@ -5,19 +5,11 @@ import sqlite3
 import os
 from datetime import datetime
 
-# TCP persistence server: handles simple JSON commands over TCP to read/write data
-# Protocol:
-#  - Client sends a single line with a JSON object, e.g.:
-#    {"action":"save_score","user_id":1,"puntaje":123}
-#  - Server replies with a single line JSON: {"success": true, ...}
-#
-# This intentionally uses sqlite3 directly to avoid depending on a Flask app context.
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'usuarios.db')
 HOST = os.environ.get('TCP_PERSIST_HOST', '127.0.0.1')
 PORT = int(os.environ.get('TCP_PERSIST_PORT', '6000'))
 
-# Ensure DB exists with expected schema minimally (id, puntaje_maximo, fecha_ultimo_juego)
 SCHEMA_CHECK = """
 CREATE TABLE IF NOT EXISTS usuarios (
     id INTEGER PRIMARY KEY,
@@ -46,7 +38,7 @@ def handle_client(conn, addr):
                 break
         if not data:
             return
-        # support either newline-terminated or raw single JSON message
+        
         try:
             payload = json.loads(data.decode('utf-8').strip())
         except json.JSONDecodeError:
@@ -60,17 +52,17 @@ def handle_client(conn, addr):
             if not isinstance(user_id, int) or not isinstance(puntaje, int):
                 conn.sendall((json.dumps({"success": False, "error": "invalid_params"}) + "\n").encode('utf-8'))
                 return
+            
             try:
                 with sqlite3.connect(DB_PATH) as con:
                     cur = con.cursor()
-                    # Ensure table exists
                     cur.executescript(SCHEMA_CHECK)
-                    # Read current score
                     cur.execute("SELECT puntaje_maximo FROM usuarios WHERE id=?", (user_id,))
                     row = cur.fetchone()
                     if not row:
                         conn.sendall((json.dumps({"success": False, "error": "user_not_found"}) + "\n").encode('utf-8'))
                         return
+                    
                     current_max = row[0] or 0
                     nuevo_record = puntaje > current_max
                     if nuevo_record:
@@ -79,6 +71,7 @@ def handle_client(conn, addr):
                             (puntaje, datetime.utcnow().isoformat(), user_id)
                         )
                         con.commit()
+                    
                     conn.sendall((json.dumps({
                         "success": True,
                         "nuevo_record": nuevo_record,

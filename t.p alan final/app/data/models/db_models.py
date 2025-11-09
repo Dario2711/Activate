@@ -24,3 +24,19 @@ class Usuario(db.Model):
 
     def __repr__(self):
         return f'<Usuario {self.email}>'
+
+class Recompensa(db.Model):
+    __tablename__ = 'recompensas'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    descripcion = db.Column(db.String(255), nullable=False)
+    puntos = db.Column(db.Integer, nullable=False)
+    imagen = db.Column(db.String(255), nullable=True, default='default.png')
+
+class CanjeRecompensa(db.Model):
+    __tablename__ = 'canjes'
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    recompensa_id = db.Column(db.Integer, db.ForeignKey('recompensas.id'), nullable=False)
+    fecha = db.Column(db.DateTime, default=datetime.utcnow)
+    recompensa = db.relationship('Recompensa', backref='canjes')
