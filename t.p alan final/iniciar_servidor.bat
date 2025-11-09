@@ -72,8 +72,6 @@ echo ===========================================
 echo [*] Iniciando servicios...
 echo [*] Servidor de persistencia TCP: 127.0.0.1:6000
 echo [*] Backend Flask: http://127.0.0.1:5000
-echo [*] Usuario administrador: admin@admin.com
-echo [*] Contraseña: admin123
 echo ===========================================
 echo.
 
