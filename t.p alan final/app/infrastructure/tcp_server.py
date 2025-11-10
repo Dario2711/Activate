@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS usuarios (
 def handle_client(conn, addr):
     try:
         data = b''
-        # Read until newline or connection close
         while True:
             chunk = conn.recv(4096)
             if not chunk:
